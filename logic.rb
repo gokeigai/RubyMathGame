@@ -1,15 +1,11 @@
 =begin
   
-Math generates questions.
-
 operator = ['+', '-', '*', '/']
 operator.map {|o| 2.method(o).(2) }
 # => [4, 0, 4, 1]
 
 Numbers rand 1-20
 rand(20)
-
--setter answer and question 
 
 random_question
 - save to @answer
@@ -20,7 +16,6 @@ solve
 - player  input
 - return bool whether solved
 
-  
 =end
 
 @answer = 0
