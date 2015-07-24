@@ -19,8 +19,8 @@ while (true)
   else
     solve_status = solved?(player_input)  
     if(solve_status)
-
       puts "Good Job!"
+      add_score(@current_player)
     else
 
       puts "Sorry wrong answer"

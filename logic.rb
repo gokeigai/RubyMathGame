@@ -59,6 +59,10 @@ def lose_life(player)
   @player_lives[player] -= 1
 end
 
+def add_score(player)
+  @player_points[player] += 1
+end
+
 def solved?(answer)
   correct = @question[0].method(@operator).(@question[1])
   print @question[0], @operator, @question[1], " = ", correct,":", answer
