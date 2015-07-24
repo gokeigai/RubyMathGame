@@ -28,7 +28,9 @@ while (true)
       puts "Player #{@current_player+1} current life: #{@player_lives[@current_player]}"
     
       if(lost?(@current_player))
-        puts "Player #{@current_player+1} lost"
+        current_player_title = @current_player+1
+        puts "Player #{current_player_title} lost"
+        puts "Player #{current_player_title-1} won"
         print_status
         break
       end
