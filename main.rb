@@ -1,23 +1,41 @@
 require "./question.rb"
 require "./player.rb"
 require "./color.rb"
+require "./invalid.rb"
 
+include Invalid
 
-puts "Welcome to Math Blitz (tmp)"
-puts "Use \"done\" to stop the game: "
+def ask_name(player_number)
+  puts "Enter Player #{player_number} name:"
+  name = gets.chomp
+end
 
-num_of_players = 2
+puts "Welcome to Math Blitz"
+puts "How many players?"
+num_of_players = gets.chomp.to_i
 players = []
 question = Question.new()
 game_on = true
+counter = 0
 
 for i in 1..num_of_players
-  tmp_player = Player.new("Player #{i}")
+  begin
+    name = ask_name(i)
+    raise InvalidPlayerName if name.empty?
+  rescue InvalidPlayerName
+    puts "Name cannot be empty"
+    redo
+  end
+  tmp_player = Player.new(name)
   players.push(tmp_player)
 end
 
 while game_on
-  players.cycle { |player|
+
+  # inner loop for game
+  while true
+    current = counter % players.length
+    player = players[current]
 
     question.new_question
 
@@ -27,33 +45,29 @@ while game_on
 
     puts question.print_question
     response = gets.chomp
-    if response == "done"
-      #get out outer
-      game_on = false
-      #get out inner
-      break
+
+    solved = question.solved?(response)
+    if solved
+      puts green("Correct!")
+      player.add_score
     else
-      solved = question.solved?(response)
-      if solved
-        puts green("Correct!")
-        player.add_score
-      else
-        puts red("Incorrect!")
-        player.lose_life
-      end
-
-      puts question.print_answer
-
-      players.each do |player|
-        puts player.print_status 
-      end
-
-      if player.lost?
-          game_on = false
-          break
-      end
+      puts red("Incorrect!")
+      player.lose_life
     end
-  }
+
+    puts question.print_answer
+
+    players.each do |player|
+      puts player.print_status 
+    end
+
+    if player.lost?
+        game_on = false
+        break
+    end
+
+    counter += 1
+  end
 
   winner = -1
 
