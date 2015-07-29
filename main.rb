@@ -16,7 +16,6 @@ num_of_players = gets.chomp.to_i
 players = []
 question = Question.new()
 game_on = true
-counter = 0
 
 for i in 1..num_of_players
   begin
@@ -32,41 +31,49 @@ end
 
 while game_on
 
+  counter = 0 
+  
   # inner loop for game
   while true
-    current = counter % players.length
-    player = players[current]
+    begin
+      current = counter % players.length
+      player = players[current]
 
-    question.new_question
+      question.new_question
 
-    puts "--------------"
-    puts "#{player.name} Your Question:"
-    puts "--------------"
+      puts "--------------"
+      puts "#{player.name} Your Question:"
+      puts "--------------"
 
-    puts question.print_question
-    response = gets.chomp
+      puts question.print_question
+      response = gets.chomp
 
-    solved = question.solved?(response)
-    if solved
-      puts green("Correct!")
-      player.add_score
-    else
-      puts red("Incorrect!")
-      player.lose_life
+      raise InvalidGuessError if response =~ /\D/
+    rescue InvalidGuessError
+      puts "Sorry that wasn't a number"
+      redo
     end
+      solved = question.solved?(response)
+      if solved
+        puts green("Correct!")
+        player.add_score
+      else
+        puts red("Incorrect!")
+        player.lose_life
+      end
 
-    puts question.print_answer
+      puts question.print_answer
 
-    players.each do |player|
-      puts player.print_status 
-    end
+      players.each do |player|
+        puts player.print_status 
+      end
 
-    if player.lost?
-        game_on = false
-        break
-    end
+      if player.lost?
+          game_on = false
+          break
+      end
 
-    counter += 1
+      counter += 1
   end
 
   winner = -1
