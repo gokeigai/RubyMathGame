@@ -25,8 +25,9 @@ end
 for i in 1..num_of_players
   begin
     name = ask_name(i)
-    raise InvalidPlayerName if name.empty?
-  rescue InvalidPlayerName, "Name cannot be empty"
+    raise InvalidPlayerName, "Name cannot be empty" if name.empty?
+  rescue InvalidPlayerName => e
+    puts e.message
     redo
   end
   tmp_player = Player.new(name)
@@ -52,8 +53,9 @@ while game_on
       puts question.print_question
       response = gets.chomp
 
-      raise InvalidGuessError if response =~ /\D/
-    rescue InvalidGuessError, "Sorry that wasn't a number"
+      raise InvalidGuessError, "Sorry that wasn't a number" if response =~ /\D/
+    rescue InvalidGuessError => e
+      puts e.message
       redo
     end
       solved = question.solved?(response)
