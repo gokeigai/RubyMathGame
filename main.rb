@@ -17,12 +17,16 @@ players = []
 question = Question.new()
 game_on = true
 
+if num_of_players.nil? || num_of_players < 2
+  num_of_players = 2
+  puts "No number detected, setting game to 2 players"
+end
+
 for i in 1..num_of_players
   begin
     name = ask_name(i)
     raise InvalidPlayerName if name.empty?
-  rescue InvalidPlayerName
-    puts "Name cannot be empty"
+  rescue InvalidPlayerName, "Name cannot be empty"
     redo
   end
   tmp_player = Player.new(name)
@@ -32,7 +36,7 @@ end
 while game_on
 
   counter = 0 
-  
+
   # inner loop for game
   while true
     begin
@@ -49,8 +53,7 @@ while game_on
       response = gets.chomp
 
       raise InvalidGuessError if response =~ /\D/
-    rescue InvalidGuessError
-      puts "Sorry that wasn't a number"
+    rescue InvalidGuessError, "Sorry that wasn't a number"
       redo
     end
       solved = question.solved?(response)
